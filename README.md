@@ -38,6 +38,8 @@ waf install --destdir=<game folder>
 
 `-8` builds 64-bit, which OpenRemix requires. Instead of `--openremix-include`, you can set the `OPENREMIX_INCLUDE` environment variable, or keep the OpenRemix checkout next to this repository as `OpenRemix`. Never use GitHub's ZIP downloads: they leave out the submodules.
 
+The GitHub Actions workflow publishes an x64 Windows engine package named `xash3d-fwgs-openremix-win32-amd64.7z` on its continuous releases. It contains Xash3D, `ref_openremix.dll` and SDL3; build or obtain the OpenRemix runtime and 64-bit game libraries separately.
+
 ## Setting up the game folder
 
 1. Run `waf install`, or copy `xash3d.exe`, `xash.dll`, `filesystem_stdio.dll`, `ref_openremix.dll`, `menu.dll` and `SDL3.dll` into one folder.
