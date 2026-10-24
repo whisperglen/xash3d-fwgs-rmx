@@ -1,5 +1,7 @@
 name: Build & Deploy Engine
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: write
 jobs:
 #  cleanup:
 #    runs-on: self-hosted
@@ -90,6 +92,37 @@ jobs:
       with:
         name: artifact-${{ matrix.targetos }}-${{ matrix.targetarch }}
         path: artifacts/*
+  openremix:
+    name: "Build OpenRemix renderer"
+    runs-on: windows-latest
+    env:
+      SDL3_VERSION: 3.4.14
+      # OpenRemix main at the API version used by ref/openremix.
+      OPENREMIX_REF: 3d2b7f540083a3682b6e16f391c3ce90c5afb529
+      FWGS_PFX_PASSWORD: ${{ secrets.FWGS_PFX_PASSWORD }}
+    steps:
+    - name: Checkout Xash3D FWGS
+      uses: actions/checkout@v6
+      with:
+        submodules: recursive
+    - name: Checkout OpenRemix headers
+      uses: actions/checkout@v6
+      with:
+        repository: Veitaserum4/OpenRemix-J
+        ref: ${{ env.OPENREMIX_REF }}
+        path: OpenRemix
+        sparse-checkout: |
+          public/include
+        sparse-checkout-cone-mode: true
+    - name: Install OpenRemix build dependencies
+      run: bash scripts/gha/deps_openremix.sh
+    - name: Build OpenRemix renderer
+      run: bash scripts/gha/build_openremix.sh
+    - name: Upload OpenRemix engine (artifact)
+      uses: actions/upload-artifact@v7
+      with:
+        name: artifact-win32-openremix-amd64
+        path: artifacts/*
   flatpak:
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -113,7 +146,7 @@ jobs:
   release:
     name: "Upload releases"
     runs-on: ubuntu-latest
-    needs: [build, flatpak]
+    needs: [build, openremix, flatpak]
     if: ${{ github.event_name == 'push' }}
     steps:
     - name: Checkout
