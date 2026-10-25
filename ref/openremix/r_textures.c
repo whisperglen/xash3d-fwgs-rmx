@@ -1119,7 +1119,9 @@ static int R_Textures_UploadRGBA( const char *name, uint32_t width, uint32_t hei
 	remixapi_MaterialInfoTranslucentEXT waterExt;
 	remixapi_MaterialNormalEncodingEXT waterNormalEnc;
 	remixapi_MaterialNormalScrollEXT waterScroll;
+#if XASH_OPENREMIX_HAS_CAUSTICS
 	remixapi_MaterialInfoCausticsEXT waterCaustics;
+#endif
 	wchar_t waterNormal[32];
 	qboolean hasWaterNormal = false;
 
@@ -1187,11 +1189,13 @@ static int R_Textures_UploadRGBA( const char *name, uint32_t width, uint32_t hei
 			waterExt.pNext = &waterNormalEnc;
 		}
 
+#if XASH_OPENREMIX_HAS_CAUSTICS
 		// Light through the water draws fake caustics on what it lights (rt_caustics)
 		memset( &waterCaustics, 0, sizeof( waterCaustics ) );
 		waterCaustics.sType = REMIXAPI_STRUCT_TYPE_MATERIAL_INFO_CAUSTICS_EXT;
 		waterCaustics.pNext = waterExt.pNext;
 		waterExt.pNext      = &waterCaustics;
+#endif
 	}
 
 	// XashRT PBR maps: _orm packs roughness in green and metallic in blue (RayTracedGL1's

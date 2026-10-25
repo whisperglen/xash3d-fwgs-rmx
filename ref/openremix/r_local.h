@@ -21,6 +21,15 @@
 #include "remix/remix_c.h"
 #include "remix/remix_native_ext.h"
 
+// The caustics material extension is newer than the currently published
+// OpenRemix headers. Enable the integration automatically once those headers
+// expose its structure-type macro; older headers continue to build without it.
+#if defined( REMIXAPI_STRUCT_TYPE_MATERIAL_INFO_CAUSTICS_EXT )
+#define XASH_OPENREMIX_HAS_CAUSTICS 1
+#else
+#define XASH_OPENREMIX_HAS_CAUSTICS 0
+#endif
+
 // Xash3D engine headers
 #include "xash3d_types.h"
 #include "const.h"
