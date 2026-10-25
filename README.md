@@ -1,6 +1,6 @@
 # Xash3D FWGS + OpenRemix
 
-This fork adds `ref_openremix`, a path-traced renderer for Half-Life built on [OpenRemix](https://github.com/Veitaserum4/OpenRemix-J). The engine is unchanged from upstream Xash3D FWGS; the fork adds the renderer (`ref/openremix`) and a **Ray tracing** options page in the game menu.
+This fork adds `ref_openremix`, a path-traced renderer for Half-Life built on [OpenRemix](https://github.com/OpenRenderCollective/OpenRemix). The engine is unchanged from upstream Xash3D FWGS; the fork adds the renderer (`ref/openremix`) and a **Ray tracing** options page in the game menu.
 
 > This project uses AI-generated code.
 
@@ -38,7 +38,7 @@ waf install --destdir=<game folder>
 
 `-8` builds 64-bit, which OpenRemix requires. Instead of `--openremix-include`, you can set the `OPENREMIX_INCLUDE` environment variable, or keep the OpenRemix checkout next to this repository as `OpenRemix`. Never use GitHub's ZIP downloads: they leave out the submodules.
 
-The GitHub Actions workflow publishes an x64 Windows engine package named `xash3d-fwgs-openremix-win32-amd64.7z` on its continuous releases. It contains Xash3D, `ref_openremix.dll` and SDL3; build or obtain the OpenRemix runtime and 64-bit game libraries separately.
+The GitHub Actions workflow publishes an x64 Windows engine package named `xash3d-fwgs-openremix-win32-amd64.7z` on its continuous releases. It contains Xash3D, `ref_openremix.dll` and SDL3; build or obtain the OpenRemix runtime and 64-bit game libraries separately. Manual workflow runs offer `pinned` (the reproducible default) or `latest` (OpenRemix `main`) as the header source; push and pull-request builds always use the pinned revision.
 
 ## Setting up the game folder
 

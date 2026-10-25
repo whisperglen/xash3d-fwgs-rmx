@@ -1,5 +1,17 @@
 name: Build & Deploy Engine
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      openremix_source:
+        description: OpenRemix revision for the renderer build
+        required: true
+        default: pinned
+        type: choice
+        options:
+          - pinned
+          - latest
 permissions:
   contents: write
 jobs:
@@ -97,8 +109,8 @@ jobs:
     runs-on: windows-latest
     env:
       SDL3_VERSION: 3.4.14
-      # OpenRemix main at the API version used by ref/openremix.
-      OPENREMIX_REF: 3d2b7f540083a3682b6e16f391c3ce90c5afb529
+      # Pushes and pull requests use this immutable revision. Manual runs can select main.
+      OPENREMIX_REF: ${{ inputs.openremix_source == 'latest' && 'main' || '13c3a1001be4d5eb40a8037c136ca6efca8461eb' }}
       FWGS_PFX_PASSWORD: ${{ secrets.FWGS_PFX_PASSWORD }}
     steps:
     - name: Checkout Xash3D FWGS
@@ -108,7 +120,7 @@ jobs:
     - name: Checkout OpenRemix headers
       uses: actions/checkout@v6
       with:
-        repository: Veitaserum4/OpenRemix-J
+        repository: OpenRenderCollective/OpenRemix
         ref: ${{ env.OPENREMIX_REF }}
         path: OpenRemix
         sparse-checkout: |
